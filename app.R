@@ -16,10 +16,22 @@ post_td_plays <- read_csv("post_td_plays.csv")
 ui <- fluidPage(theme = shinytheme("united"),
                 titlePanel("NFL Post-TD Plays: Win Probability Shifts after XPT or 2PT"),
                 
+                # Project description
+                fluidRow(
+                  column(width = 12, 
+                         style = 'padding:1em;',
+                         includeMarkdown("desc_text.md")
+                  )
+                ),
+                br(),
+                br(),
+                br(),
+                
                 fluidRow(
                   
                   # XPT graph
-                  column(6,
+                  column(width = 6,
+                         style = 'padding:1em;',
                          sidebarLayout(
                            sidebarPanel(
                              
@@ -33,14 +45,14 @@ ui <- fluidPage(theme = shinytheme("united"),
                            
                            # Output: Linegraph
                            mainPanel(
-                             plotOutput(outputId = "linegraphXPT"),
-                             tags$a(href = "https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016", "Source: Kaggle's NFL play-by-play data from 2009-2018", target = "_blank")
+                             plotOutput(outputId = "linegraphXPT")
                            )
                          ),
                   ),
                   
                   # 2PT graph
-                  column(6,
+                  column(width = 6,
+                         style = 'padding:1em;',
                          sidebarLayout(
                            sidebarPanel(
                              
@@ -65,8 +77,7 @@ ui <- fluidPage(theme = shinytheme("united"),
                            
                            # Output: Linegraph
                            mainPanel(
-                             plotOutput(outputId = "linegraph2PT"),
-                             tags$a(href = "https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016", "Source: Kaggle's NFL play-by-play data from 2009-2018", target = "_blank")
+                             plotOutput(outputId = "linegraph2PT")
                            )
                          ),
                   )
@@ -75,34 +86,37 @@ ui <- fluidPage(theme = shinytheme("united"),
                 br(),
                 br(),
                 br(),
+                br(),
                 
                 fluidRow(
-                  sidebarLayout(
-                    # Sidebar panel for inputs ----
-                    sidebarPanel(
-                      
-                      # Input: Select the random distribution type ----
-                      checkboxGroupInput("extra_point_type_options", "Post-TD Play Type:",
-                                         c("Kick" = "Kick",
-                                           "Two-point Conversion" = "Two-PointConversion")),
-                      
-                      # br() element to introduce extra vertical spacing ----
-                      br(),
-                      
-                      # Input: Slider for the number of observations to generate ----
-                      sliderInput("game_minutes_remaining",
-                                  "Game Minutes Remaining:",
-                                  value = 15, # start of 4th quarter
-                                  min = 0,
-                                  max = 60)
-                      
-                    ),
-                    
-                    # Output: Description, lineplot, and reference
-                    mainPanel(
-                      plotOutput(outputId = "scatterplot"),
-                      tags$a(href = "https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016", "Source: Kaggle's NFL play-by-play data from 2009-2018", target = "_blank")
-                    )
+                  column(width = 12,
+                         style = 'padding:1em;',
+                         sidebarLayout(
+                           # Sidebar panel for inputs ----
+                           sidebarPanel(
+                             
+                             # Input: Select the random distribution type ----
+                             checkboxGroupInput("extra_point_type_options", "Post-TD Play Type:",
+                                                c("Kick" = "Kick",
+                                                  "Two-point Conversion" = "Two-PointConversion")),
+                             
+                             # br() element to introduce extra vertical spacing ----
+                             br(),
+                             
+                             # Input: Slider for the number of observations to generate ----
+                             sliderInput("game_minutes_remaining",
+                                         "Game Minutes Remaining:",
+                                         value = 15, # start of 4th quarter
+                                         min = 0,
+                                         max = 60)
+                           ),
+                           
+                           
+                           # Output: Description, lineplot, and reference
+                           mainPanel(
+                             plotOutput(outputId = "scatterplot")
+                           )
+                         )
                   )
                 )
 )
@@ -155,3 +169,4 @@ server <- function(input, output) {
 
 # Create Shiny object
 shinyApp(ui = ui, server = server)
+
