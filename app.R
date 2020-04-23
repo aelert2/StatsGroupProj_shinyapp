@@ -11,6 +11,8 @@ library(readr)
 # Load data
 # This dataset contains the NFL pbp data, betting data, and weather data from Repo #1
 post_td_plays <- read_csv("post_td_plays.csv")
+wpa_shifts <- read_csv("wpa_shifts.csv")
+
 
 # Define UI
 ui <- fluidPage(theme = shinytheme("united"),
@@ -118,7 +120,34 @@ ui <- fluidPage(theme = shinytheme("united"),
                            )
                          )
                   )
-                )
+                ),
+                
+                br(),
+                br(),
+                br(),
+                br(),
+                
+                fluidRow(
+                  column(width = 12,
+                         style = 'padding:1em;',
+                         sidebarLayout(
+                           # Sidebar panel for inputs ----
+                           sidebarPanel(
+                             
+                             # Input: Select the random distribution type ----
+                             checkboxGroupInput("play_type", "Post-TD Play Type:",
+                                                c("Kick" = "kick",
+                                                  "Two-point Conversion" = "two_pt_conv")),
+                             ),
+                           
+                           
+                           # Output: Description, lineplot, and reference
+                           mainPanel(
+                             plotOutput(outputId = "linegraphWPAShifts")
+                             )
+                           )
+                         )
+                  )
 )
 
 
@@ -165,6 +194,15 @@ server <- function(input, output) {
       geom_point() + 
       scale_x_reverse() +
       labs(title="Win Probability Added (WPA) Based on Post-TD Play Type Over the Course of a NFL Game",x="Game Time Remaining (Minutes)", y = "WPA")
+  })
+  
+  output$linegraphWPAShifts <- renderPlot({
+    wpa_shifts %>% 
+      pivot_longer(c(kick, two_pt_conv), names_to = "play_type", values_to = "wpa") %>% 
+      filter(play_type %in% input$play_type) %>% 
+      ggplot(aes(x = point_differential, y = wpa, color = play_type)) +
+      geom_line() +
+      labs(title="WPA Shifts By Point Differential",x="Point Differential (PostTeam's Perspective)", y = "WPA")
   })
 }
 
