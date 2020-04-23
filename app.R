@@ -135,7 +135,7 @@ server <- function(input, output) {
       ggplot(aes(x = year, y = n, group = extra_point_result)) +
       geom_line(aes(color = extra_point_result)) +
       geom_point(aes(color = extra_point_result)) +
-      #annotate(geom="text", x='2016', y=1100, label="2015: XPT moved from 2YL to 15YL", color="darkgray") +
+      geom_vline(xintercept = 2015, linetype="dashed", color = "darkgray", size = 1) +
       labs(title="Extra Points in the NFL from 2009 to 2018", x="Year", y = "Count")
   })
   
@@ -151,6 +151,7 @@ server <- function(input, output) {
       ggplot(aes(x = year, y = n, group = two_point_conv_result)) +
       geom_line(aes(color = two_point_conv_result)) +
       geom_point(aes(color = two_point_conv_result)) +
+      geom_vline(xintercept = 2015, linetype="dashed", color = "darkgray", size = 1) +
       labs(title="2-pt Conversions in the NFL from 2009 to 2018",x="Year", y = "Count")
   })
   
