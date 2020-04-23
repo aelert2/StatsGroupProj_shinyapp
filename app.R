@@ -209,3 +209,5 @@ server <- function(input, output) {
 # Create Shiny object
 shinyApp(ui = ui, server = server)
 
+# library(shiny)
+# runGitHub("StatsGroupProject_shinyapp", "aelert2")
