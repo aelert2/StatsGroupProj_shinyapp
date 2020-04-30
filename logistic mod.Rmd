@@ -1,0 +1,21 @@
+---
+title: "logistic_mod"
+author: "Amanda Elert"
+date: "4/13/2020"
+output: md_document
+---
+```{r}
+two_points <- read.csv("two_point_attempts.csv")
+```
+
+```{r}
+#Logistic Regression
+glm_twopt <- glm(two_point_conv_result ~ prop_runs_greater_than_2_yards + prop_passes_greater_than_2_yards + total_yards_gained + avg_yds_per_play + completion_percentage, family = binomial(link= "logit"), data=two_points, na.action = na.exclude)
+
+
+summary(glm_twopt)
+quantile(two_points$prop_runs_greater_than_2_yards, na.rm = T)
+```
+
+
+
