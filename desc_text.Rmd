@@ -4,9 +4,20 @@ author: "Amanda Elert"
 date: "4/21/2020"
 output: md_document
 ---
-**Created by Amanda Elert, Mike Hoffmann, and Bobby Pfefferle**
+## Motivation
+In 2015, the [NFL changed the rule](http://www.nfl.com/news/story/0ap3000000493347/article/nfl-moves-extra-point-to-15yard-line-for-2015-season) so the extra point would be snapped from the 15-yardline instead of the 2-yardline. The 2-point conversion would still be snapped from the 2-yardline. The rule was changed to add skill to the post-touchdown play by making it more difficult and less of a "ceremonial" play. The NFL expected an increase of 2-point conversion attempts which would help make the games more entertaining to spectators and would then boast ratings and revenue for the NFL.
 <br>
 <br>
+Our group is interested in what factors contribute to the success or failure of 2-point conversions, and we are also curious about what situations make the most sense to attempt a 2-point conversion.
+<br>
+<br>
+
+## Thesis
+2-point conversion attempts are more likely to be successful if they are run plays and if the team with possession has ran the ball successfully in the game up until the point of the 2-point conversion attempt.
+<br>
+<br>
+
+## Data Description
 Our project uses two large datasets:
 <br>
 1. [A NFL play-by-play data from 2009 to 2018 from Kaggle](https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016)
@@ -14,4 +25,5 @@ Our project uses two large datasets:
 2. [A betting and weather dataset from Kaggle](https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data#spreadspoke_scores.csv) focusing on the spread, over/under line, stadium type, and weather conditions
 <br>
 <br>
-The [extra point yard line was moved](http://www.nfl.com/news/story/0ap3000000493347/article/nfl-moves-extra-point-to-15yard-line-for-2015-season) from the 2-yardline to the 15-yardline in 2015 because the NFL wanted to increase the number of 2-point conversion attempts to boast ratings. We want to analyze how attempting more 2-point conversions, especially in the 4th quarter, can benefit teams by measuring the win probability added (WPA) after a successful 2-point conversions compared to an extra point kick. [WPA](http://archive.advancedfootballanalytics.com/2010/01/win-probability-added-wpa-explained.html) measures each play in terms of how much it increased or decreased a team’s chances of winning the game.
+<br>
+**Created by Amanda Elert, Mike Hoffmann, and Bobby Pfefferle**
