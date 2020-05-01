@@ -16,7 +16,8 @@ wpa_shifts <- read_csv("wpa_shifts.csv")
 
 
 # Define UI
-ui <- navbarPage("2-point Conversions in the NFL",
+ui <- navbarPage(theme = shinytheme("united"),
+                 "2-point Conversions in the NFL",
                  tabPanel("Background",
                           includeMarkdown("desc_text.md")
                  ),
