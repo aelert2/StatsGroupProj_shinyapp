@@ -8,6 +8,7 @@ library(tidyverse)
 library(shinythemes)
 library(dplyr)
 library(readr)
+library(lubridate)
 
 # Load data
 # This dataset contains the NFL pbp data, betting data, and weather data from Repo #1
@@ -19,25 +20,57 @@ wpa_shifts <- read_csv("wpa_shifts.csv")
 ui <- navbarPage(theme = shinytheme("united"),
                  "2-point Conversions in the NFL",
                  tabPanel("Background",
-                          includeMarkdown("desc_text.md")
-                 ),
+                          fluidRow(
+                            column(width = 12, 
+                                   style = 'padding:1em;',
+                                   includeMarkdown("desc_text.md")
+                                   )
+                            )
+                          ),
                  tabPanel("Exploration",
                           fluidRow(
                             column(width = 12, 
                                    style = 'padding:1em;',
+                                   includeMarkdown("exploration_1.md")
+                            )
+                          ),
+                          fluidRow(
+                            column(width = 12, 
+                                   style = 'padding:1em;',
                                    sidebarLayout(
-                                     sidebarPanel(
+                                     sidebarPanel(width = 2,
                                        # Chose what post-td play results you want to see
                                        checkboxGroupInput("prop_options", "Post-TD Play Type:",
-                                                          c("Kick" = "prop_expt",
-                                                            "Two-point Conversion" = "prop_twopt"))
+                                                          c("Kick" = "ExtraPoint",
+                                                            "Two-point Conversion" = "TwoPoint"))
                                        ),
-                                     mainPanel(
+                                     mainPanel(width = 10,
                                        plotOutput(outputId = "bargraph")
                                        )
                                      )
                                    )
                             ),
+                          
+                          fluidRow(
+                            column(width = 12,
+                                   style = 'padding:1em;',
+                                   sidebarLayout(
+                                     sidebarPanel(width = 3,
+                                       checkboxGroupInput("play_type_options", "Two-Point Conversion Play Type:",
+                                                          c("Run" = "run",
+                                                            "Pass" = "pass")),
+                                       br(),
+                                       checkboxGroupInput("two_point_conv_result_options", "Two-Point Conversion Result:",
+                                                          c("Success" = "success",
+                                                            "Failure" = "failure"))
+                                       ),
+                                     
+                                     mainPanel(width = 9,
+                                       plotOutput(outputId = "linegraph")
+                                     )
+                                     )
+                                   )
+                          ),
                           
                           fluidRow(
                             column(width = 12, 
@@ -64,19 +97,32 @@ ui <- navbarPage(theme = shinytheme("united"),
                        ),
                  
                  tabPanel("Logistic Model",
-                          sidebarLayout(
-                            sidebarPanel(
-                              checkboxGroupInput("play_type", "Post-TD Play Type:",
-                                                 c("Kick" = "kick",
-                                                   "Two-point Conversion" = "two_pt_conv")),
-                            ),
-                            
-                            mainPanel(
-                              plotOutput(outputId = "linegraphWPAShifts")
+                          fluidRow(
+                            column(width = 12, 
+                                   style = 'padding:1em;',
+                                   includeMarkdown("logistic_mod.md")
+                                   # sidebarLayout(
+                                   #   sidebarPanel(
+                                   #     checkboxGroupInput("play_type", "Post-TD Play Type:",
+                                   #                        c("Kick" = "kick",
+                                   #                          "Two-point Conversion" = "two_pt_conv")),
+                                   #   ),
+                                   #   
+                                   #   mainPanel(
+                                   #     plotOutput(outputId = "linegraphWPAShifts")
+                                   #   )
+                                   # )
                             )
                           )
                  ),
-                 tabPanel("Conclusion")
+                 tabPanel("Conclusion",
+                          fluidRow(
+                            column(width = 12, 
+                                   style = 'padding:1em;',
+                                   includeMarkdown("conclusion.md")
+                                   )
+                          )
+                 )
 )
 
 
@@ -91,19 +137,41 @@ server <- function(input, output) {
       pivot_wider(names_from = "extra_point_type", values_from = "n") %>% 
       rename(ex_pt_attempt = Kick,
              two_pt_attempt = `Two-PointConversion`) %>% 
-      mutate(prop_expt = ex_pt_attempt / (ex_pt_attempt + two_pt_attempt),
-             prop_twopt = two_pt_attempt / (ex_pt_attempt + two_pt_attempt)) %>% 
-      pivot_longer(cols = c('prop_expt', 'prop_twopt'), names_to = 'play_type2', values_to = "proportion") %>% 
-      filter(play_type2 %in% input$prop_options) %>% 
-      ggplot(aes(x = year, y = proportion, fill = play_type2)) +
+      mutate(ExtraPoint = ex_pt_attempt / (ex_pt_attempt + two_pt_attempt),
+             TwoPoint = two_pt_attempt / (ex_pt_attempt + two_pt_attempt)) %>% 
+      pivot_longer(cols = c('ExtraPoint', 'TwoPoint'), names_to = 'PlayType', values_to = "proportion") %>% 
+      filter(PlayType %in% input$prop_options) %>% 
+      ggplot(aes(x = year, y = proportion, fill = PlayType)) +
       geom_bar(stat='identity', position='dodge') +
+      scale_fill_discrete(name ="Play Type",
+                            breaks=c("ExtraPoint", "TwoPoint"),
+                            labels=c("Kick", "Two-Point Conv.")) +
       geom_vline(xintercept = 2015, linetype="dashed", color = "darkgray", size = 1) +
       labs(title="All Post-TD Plays in the NFL from 2009 to 2018", x="Year", y = "Proportion") +
-      guides(fill = guide_legend(title=NULL))
+      theme(legend.position="top")
+  })
+  
+  output$linegraph <- renderPlot({
+    post_td_plays %>% 
+      filter(extra_point_type == "Two-PointConversion",
+             play_type %in% input$play_type_options,
+             two_point_conv_result %in% input$two_point_conv_result_options) %>% 
+      group_by(year, play_type, two_point_conv_result) %>% 
+      summarise(n = n()) %>% 
+      ggplot(aes(x = year, y = n, color = two_point_conv_result, shape = play_type)) +
+      geom_line() +
+      geom_point(size = 4) +
+      scale_shape_discrete(name  ="Play Type",
+                           breaks=c("run", "pass"),
+                           labels=c("Run", "Pass")) +
+      scale_colour_discrete(name  ="Result",
+                            breaks=c("success", "failure"),
+                            labels=c("Success", "Failure")) +
+      scale_x_continuous() +
+      labs(title="Two-Point Conversions by Play Type from 2009-2018", x="Year", y = "Count") +
+      theme(legend.position="top")
   })
 
-  
-  # Create scatterplot object the plotOutput function is expecting
   output$scatterplot <- renderPlot({
     post_td_plays %>% 
       filter(extra_point_type %in% input$extra_point_type_options) %>% 

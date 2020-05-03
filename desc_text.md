@@ -1,3 +1,10 @@
+Background
+==========
+
+**Authors:** Amanda Elert, Mike Hoffmann, and Bobby Pfefferle <br>
+**Class:** Statistics 479 - Spring 2020 <br> **Purpose:** Final class
+project <br> **Title:** 2-point Conversions in the NFL <br> <br>
+
 Motivation
 ----------
 
@@ -31,5 +38,4 @@ Kaggle](https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016) <br>
 2. [A betting and weather dataset from
 Kaggle](https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data#spreadspoke_scores.csv)
 focusing on the spread, over/under line, stadium type, and weather
-conditions <br> <br> <br> **Created by Amanda Elert, Mike Hoffmann, and
-Bobby Pfefferle**
+conditions

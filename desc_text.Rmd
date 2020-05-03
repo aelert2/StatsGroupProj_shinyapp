@@ -4,6 +4,17 @@ author: "Amanda Elert"
 date: "4/21/2020"
 output: md_document
 ---
+# Background
+**Authors:** Amanda Elert, Mike Hoffmann, and Bobby Pfefferle 
+<br>
+**Class:** Statistics 479 - Spring 2020
+<br>
+**Purpose:** Final class project
+<br>
+**Title:** 2-point Conversions in the NFL
+<br>
+<br>
+
 ## Motivation
 In 2015, the [NFL changed the rule](http://www.nfl.com/news/story/0ap3000000493347/article/nfl-moves-extra-point-to-15yard-line-for-2015-season) so the extra point would be snapped from the 15-yardline instead of the 2-yardline. The 2-point conversion would still be snapped from the 2-yardline. The rule was changed to add skill to the post-touchdown play by making it more difficult and less of a "ceremonial" play. The NFL expected an increase of 2-point conversion attempts which would help make the games more entertaining to spectators and would then boast ratings and revenue for the NFL.
 <br>
@@ -23,7 +34,3 @@ Our project uses two large datasets:
 1. [A NFL play-by-play data from 2009 to 2018 from Kaggle](https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016)
 <br>
 2. [A betting and weather dataset from Kaggle](https://www.kaggle.com/tobycrabtree/nfl-scores-and-betting-data#spreadspoke_scores.csv) focusing on the spread, over/under line, stadium type, and weather conditions
-<br>
-<br>
-<br>
-**Created by Amanda Elert, Mike Hoffmann, and Bobby Pfefferle**

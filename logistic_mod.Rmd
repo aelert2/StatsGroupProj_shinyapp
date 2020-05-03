@@ -4,31 +4,25 @@ author: "Amanda Elert"
 date: "4/13/2020"
 output: md_document
 ---
-```{r}
+```{r message=FALSE, warning=FALSE, include=FALSE}
 library(tidyverse)
 library(lubridate)
 two_points <- read_csv("two_point_attempts.csv") %>% 
   mutate(play_type = as.factor(play_type),
          weather_detail = as.factor(weather_detail))
-str(two_points)
-
+# str(two_points)
 ```
-
+# Logistic Regression
+We created a logistic regression model to determine what variables were significant in predicting the success probability of a two-point conversion. Because we are testing our thesis that a run play is a more successful option than a pass play, we included numerous variables that quantify the team's success with running the ball in the game up until the two-point conversion attempt.
+<br>
 ```{r}
-#Logistic Regression
 glm_twopt <- glm(two_point_conv_result ~ prop_runs_greater_than_2_yards + prop_passes_greater_than_2_yards + total_pass_yards + total_run_yards + num_runs + num_passes + avg_yds_per_play + completion_percentage + play_type + score_differential + avg_yards_per_run + avg_yards_per_pass, family = binomial(link= "logit"), data=two_points, na.action = na.exclude)
 
 summary(glm_twopt)
-quantile(two_points$prop_runs_greater_than_2_yards, na.rm = T)
+```
 
-# From Amanda's STAT 421 notes
-# log.model = glm(y~x, family = binomial(link = logit)) # Have to specific which type of link it is
-# 
-# logits = log.model$coef[1] + log.model$coef[2]*grid
-# log.probs = exp(logits)/(1+exp(logits))
-# lines(grid, log.probs, lty=2, col = "red")
-# 
-# summary(log.model)
+```{r include=FALSE}
+quantile(two_points$prop_runs_greater_than_2_yards, na.rm = T)
 ```
 
 

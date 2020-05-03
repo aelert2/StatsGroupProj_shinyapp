@@ -1,0 +1,8 @@
+---
+title: "exploration_1"
+author: "Amanda Elert"
+date: "5/3/2020"
+output: md_document
+---
+# Exploration
+We conducted exploratory data analysis on our datasets to gain a better understanding of how two-point conversions are being played in the NFL.
