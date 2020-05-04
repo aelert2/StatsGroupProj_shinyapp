@@ -32,7 +32,7 @@ in the game up until the point of the 2-point conversion attempt. <br>
 Data Description
 ----------------
 
-Our project uses two large datasets: <br> 1. [A NFL play-by-play data
+Our project uses two large datasets: <br> 1. [A NFL play-by-play dataset
 from 2009 to 2018 from
 Kaggle](https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016) <br>
 2. [A betting and weather dataset from
