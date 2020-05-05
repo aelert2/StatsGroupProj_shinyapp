@@ -1,21 +1,50 @@
-# Example from https://shiny.rstudio.com/ 
-# Navbar example: https://shiny.rstudio.com/gallery/navbar-example.html
-
+################################################################
+# RUN THIS ENTIRE SECTION BELOW BEFORE RUNNING THE APPLICATION #
+###############################################################################################################################################################################################
 # Load packages
 library(shiny)
 library(tidyverse)
-#install.packages("shinythemes")
 library(shinythemes)
 library(dplyr)
 library(readr)
 library(lubridate)
 
 # Load data
-# This dataset contains the NFL pbp data, betting data, and weather data from Repo #1
+# This dataset contains the NFL pbp data, betting data, and weather data all filtered to only include the post-td plays (i.e. extra point kicks and two-pt conv attempts)
 post_td_plays <- read_csv("post_td_plays.csv")
+
+# Adding these columns for Figure 3 on the Exploration tab
+post_td_plays$time_remaining <- ifelse(post_td_plays$game_seconds_remaining < 120, "<2Min", 
+                                       ifelse(post_td_plays$game_seconds_remaining < 300, "2-5min left",
+                                              ifelse(post_td_plays$game_seconds_remaining < 600, "5-10min left",
+                                                     ifelse(post_td_plays$game_seconds_remaining < 900, "10-15min left",
+                                                            "Before 4th Quarter"))))
+
+#Binned column describing score situation of the game based on score differential
+post_td_plays <- post_td_plays %>% 
+  mutate(score_situation = ifelse(score_differential < -7, "Losing by >7",
+                                  ifelse(score_differential >= -7 & score_differential <=-4, "Losing by 4-7",
+                                         ifelse(score_differential >= -3 & score_differential <=-1, "Losing by 1-3",
+                                                ifelse(score_differential ==0, "Tied",
+                                                       ifelse(score_differential >=1 & score_differential <=3, "Winning by 1-3",
+                                                              ifelse(score_differential >=4 & score_differential <=7, "Winning by 4-7",
+                                                                     ifelse(score_differential >7, "Winning by >7", "NA"
+                                                                     ))))))))
+
+#Level the factors so they're graphed in order
+post_td_plays$time_remaining <- factor(post_td_plays$time_remaining,levels = c("<2Min", "2-5min left", "5-10min left", "10-15min left","Before 4th Quarter"))
+post_td_plays$score_situation <- factor(post_td_plays$score_situation,levels = c("Losing by >7", "Losing by 4-7", "Losing by 1-3", "Tied", "Winning by 1-3", "Winning by 4-7","Winning by >7"))
+
+# Might delete this table if we don't use it anymore
 wpa_shifts <- read_csv("wpa_shifts.csv")
 
+###############################################################################################################################################################################################
+###############################################################################################################################################################################################
 
+
+###########################################################
+# CREATING THE SHINY APP WITH THE UI AND SERVER VARIABLES #
+###########################################################
 # Define UI
 ui <- navbarPage(theme = shinytheme("united"),
                  "2-point Conversions in the NFL",
@@ -63,17 +92,46 @@ ui <- navbarPage(theme = shinytheme("united"),
                             column(width = 12,
                                    style = 'padding:1em;',
                                    sidebarLayout(
-                                     sidebarPanel(width = 3,
+                                     sidebarPanel(width = 2,
                                        checkboxGroupInput("play_type_options", "Two-Point Conversion Play Type:",
                                                           c("Run" = "run",
                                                             "Pass" = "pass"))
                                        ),
                                      
-                                     mainPanel(width = 9,
+                                     mainPanel(width = 10,
                                        plotOutput(outputId = "expl_2")
                                        )
                                      )
                                    )
+                          ),
+                          
+                          fluidRow(
+                            column(width = 12, 
+                                   style = 'padding:1em;',
+                                   includeMarkdown("exploration_3.md")
+                            )
+                          ),
+                          
+                          fluidRow(
+                            column(width = 12,
+                                   style = 'padding:1em;',
+                                   sidebarLayout(
+                                     sidebarPanel(width = 2,
+                                                  checkboxGroupInput("score_situation_options", "Score Differential Range:",
+                                                                     c("Losing by >7" = "Losing by >7",
+                                                                       "Losing by 4-7" = "Losing by 4-7",
+                                                                       "Losing by 1-3" = "Losing by 1-3",
+                                                                       "Tied" = "Tied",
+                                                                       "Winning by 1-3" = "Winning by 1-3",
+                                                                       "Winning by 4-7" = "Winning by 4-7",
+                                                                       "Winning by >7" = "Winning by >7"))
+                                     ),
+                                     
+                                     mainPanel(width = 10,
+                                               plotOutput(outputId = "expl_3")
+                                     )
+                                   )
+                            )
                           ),
                           
                           fluidRow(
@@ -100,7 +158,7 @@ ui <- navbarPage(theme = shinytheme("united"),
                           )
                        ),
                  
-                 tabPanel("Logistic Model",
+                 tabPanel("Modeling",
                           fluidRow(
                             column(width = 12, 
                                    style = 'padding:1em;',
@@ -153,7 +211,7 @@ server <- function(input, output) {
                             breaks=c("ExtraPoint", "TwoPoint"),
                             labels=c("Kick", "Two-Point Conv.")) +
       geom_vline(xintercept = 2015, linetype="dashed", color = "darkgray", size = 1) +
-      labs(x="Year", y = "Proportion") +
+      labs(x = "Year", y = "Proportion") +
       theme(legend.position="top")
   })
   
@@ -174,6 +232,19 @@ server <- function(input, output) {
       scale_x_continuous() +
       labs(x = "Year", y = "Success Rate") +
       theme(legend.position="top")
+  })
+  
+  output$expl_3 <- renderPlot({
+    post_td_plays %>% 
+      filter(!is.na(time_remaining),
+             score_situation %in% input$score_situation_options) %>% 
+      group_by(time_remaining, score_situation) %>%
+      summarise(two_pt_attempt_rate = mean(two_point_attempt == 1, na.rm = T)) %>% 
+      ggplot(aes(x = time_remaining, y = two_pt_attempt_rate, fill = score_situation, order = score_situation)) + 
+      geom_bar(stat="identity", position="dodge") + 
+      scale_x_discrete() +
+      scale_fill_brewer(palette = "Spectral") +
+      labs(x = "Time Remaining (min)", y = "Two-point Conv. Attempt Rate")
   })
 
   output$scatterplot <- renderPlot({

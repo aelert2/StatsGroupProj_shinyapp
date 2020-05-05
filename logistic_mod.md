@@ -1,5 +1,12 @@
-Logistic Regression
-===================
+Modeling
+========
+
+We tried a couple statistical methods to predict whether a two-point
+conversion would be successful or not. We shared our work and results
+here. <br> <br>
+
+Model 1: Logistic Regression
+----------------------------
 
 We created a logistic regression model to determine what variables were
 significant in predicting the success probability of a two-point
@@ -50,3 +57,25 @@ the two-point conversion attempt. <br>
     ## AIC: 936.45
     ## 
     ## Number of Fisher Scoring iterations: 4
+
+<br>
+
+### Model 1: Data Vis
+
+Uses a binomial modeling technique to graph relationship between
+probability of successful two-point conversion and changing x axis
+
+    #Increasing probability of two point conversion success based on number of total passing yards
+    pass_yards_convprob <- ggplot(two_points, aes(x = total_pass_yards, y = two_point_conv_result)) + 
+      geom_point() + 
+      stat_smooth(method = "glm", method.args = list(family="binomial"), se = FALSE)
+
+    pass_yards_convprob
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+    ## Warning: Removed 1 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 1 rows containing missing values (geom_point).
+
+![](logistic_mod_files/figure-markdown_strict/unnamed-chunk-4-1.png)
