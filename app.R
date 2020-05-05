@@ -3,8 +3,8 @@
 
 # Load packages
 library(shiny)
-#install.packages("shinythemes")
 library(tidyverse)
+#install.packages("shinythemes")
 library(shinythemes)
 library(dplyr)
 library(readr)
@@ -46,7 +46,7 @@ ui <- navbarPage(theme = shinytheme("united"),
                                                             "Two-point Conversion" = "TwoPoint"))
                                        ),
                                      mainPanel(width = 10,
-                                       plotOutput(outputId = "bargraph")
+                                       plotOutput(outputId = "expl_1")
                                        )
                                      )
                                    )
@@ -70,8 +70,8 @@ ui <- navbarPage(theme = shinytheme("united"),
                                        ),
                                      
                                      mainPanel(width = 9,
-                                       plotOutput(outputId = "linegraph")
-                                     )
+                                       plotOutput(outputId = "expl_2")
+                                       )
                                      )
                                    )
                           ),
@@ -134,7 +134,7 @@ ui <- navbarPage(theme = shinytheme("united"),
 server <- function(input, output) {
   
   # Create bar graph of proportion of post-td plays from 2009-2018
-  output$bargraph <- renderPlot({
+  output$expl_1 <- renderPlot({
     post_td_plays %>% 
       group_by(year, extra_point_type) %>% 
       summarise(n = n()) %>% 
@@ -145,9 +145,11 @@ server <- function(input, output) {
              TwoPoint = two_pt_attempt / (ex_pt_attempt + two_pt_attempt)) %>% 
       pivot_longer(cols = c('ExtraPoint', 'TwoPoint'), names_to = 'PlayType', values_to = "proportion") %>% 
       filter(PlayType %in% input$prop_options) %>% 
-      ggplot(aes(x = year, y = proportion, fill = PlayType)) +
-      geom_bar(stat='identity', position='dodge') +
-      scale_fill_discrete(name ="Play Type",
+      ggplot(aes(x = year, y = proportion, color = PlayType)) +
+      geom_line() +
+      geom_point(size = 2) +
+      #geom_bar(stat='identity', position='dodge') +
+      scale_color_discrete(name ="Play Type",
                             breaks=c("ExtraPoint", "TwoPoint"),
                             labels=c("Kick", "Two-Point Conv.")) +
       geom_vline(xintercept = 2015, linetype="dashed", color = "darkgray", size = 1) +
@@ -155,7 +157,7 @@ server <- function(input, output) {
       theme(legend.position="top")
   })
   
-  output$linegraph <- renderPlot({
+  output$expl_2 <- renderPlot({
     post_td_plays %>% 
       filter(extra_point_type == "Two-PointConversion",
              play_type %in% input$play_type_options) %>% 
@@ -170,7 +172,7 @@ server <- function(input, output) {
                             breaks=c("run", "pass"),
                             labels=c("Run", "Pass")) +
       scale_x_continuous() +
-      labs(x="Year", y = "Success Rate") +
+      labs(x = "Year", y = "Success Rate") +
       theme(legend.position="top")
   })
 
