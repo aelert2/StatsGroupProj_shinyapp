@@ -4,5 +4,5 @@
 
 This figure explores the breakdown of play type and success rates of
 two-point conversions by year. As you can see, run plays have had a
-higher success rate in two-point conversions than pass plays have for
-every year except 2014.
+higher success rate in two-point conversion attempts than pass plays
+have for every year except 2014.

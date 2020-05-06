@@ -15,46 +15,40 @@ successful option than a pass play, we included numerous variables that
 quantify the team’s success with running the ball in the game up until
 the two-point conversion attempt. <br>
 
-    glm_twopt <- glm(two_point_conv_result ~ prop_runs_greater_than_2_yards + prop_passes_greater_than_2_yards + total_pass_yards + total_run_yards + num_runs + num_passes + avg_yds_per_play + completion_percentage + play_type + score_differential + avg_yards_per_run + avg_yards_per_pass, family = binomial(link= "logit"), data=two_points, na.action = na.exclude)
+    glm_twopt <- glm(two_point_conv_result ~ prop_runs_greater_than_2_yards + prop_passes_greater_than_2_yards + total_pass_yards + total_run_yards + num_runs + num_passes + avg_yds_per_play + completion_percentage + play_type + score_differential + avg_yards_per_run + avg_yards_per_pass + score_differential + game_seconds_remaining + third_down_conv_percentage, family = binomial(link= "logit"), data = two_points, na.action = na.exclude)
 
-    summary(glm_twopt)
+<br> We then used the stepAIC function to select the best predictors to
+use in our logistic regression model. This is the model that the stepAIC
+function selected.
+
+    summary(aic_glm)
 
     ## 
     ## Call:
-    ## glm(formula = two_point_conv_result ~ prop_runs_greater_than_2_yards + 
-    ##     prop_passes_greater_than_2_yards + total_pass_yards + total_run_yards + 
-    ##     num_runs + num_passes + avg_yds_per_play + completion_percentage + 
-    ##     play_type + score_differential + avg_yards_per_run + avg_yards_per_pass, 
-    ##     family = binomial(link = "logit"), data = two_points, na.action = na.exclude)
+    ## glm(formula = two_point_conv_result ~ total_pass_yards + num_passes + 
+    ##     play_type + game_seconds_remaining, family = binomial(link = "logit"), 
+    ##     data = two_points, na.action = na.exclude)
     ## 
     ## Deviance Residuals: 
     ##     Min       1Q   Median       3Q      Max  
-    ## -1.9193  -1.1011  -0.8825   1.1939   1.6745  
+    ## -1.6423  -1.0974  -0.8989   1.2077   1.5291  
     ## 
     ## Coefficients:
-    ##                                   Estimate Std. Error z value Pr(>|z|)   
-    ## (Intercept)                       0.940460   1.306441   0.720  0.47161   
-    ## prop_runs_greater_than_2_yards    0.497273   0.733317   0.678  0.49770   
-    ## prop_passes_greater_than_2_yards  0.549797   1.430611   0.384  0.70075   
-    ## total_pass_yards                  0.007786   0.004103   1.897  0.05776 . 
-    ## total_run_yards                   0.008572   0.005676   1.510  0.13103   
-    ## num_runs                         -0.033314   0.031230  -1.067  0.28610   
-    ## num_passes                       -0.051755   0.027959  -1.851  0.06415 . 
-    ## avg_yds_per_play                 -0.006595   0.265428  -0.025  0.98018   
-    ## completion_percentage            -1.028656   1.379796  -0.746  0.45596   
-    ## play_typerun                      0.505161   0.190867   2.647  0.00813 **
-    ## score_differential               -0.005140   0.008596  -0.598  0.54988   
-    ## avg_yards_per_run                -0.105996   0.119651  -0.886  0.37568   
-    ## avg_yards_per_pass               -0.096178   0.171378  -0.561  0.57466   
+    ##                          Estimate Std. Error z value Pr(>|z|)   
+    ## (Intercept)             0.2607147  0.4228716   0.617  0.53754   
+    ## total_pass_yards        0.0043591  0.0014478   3.011  0.00260 **
+    ## num_passes             -0.0390003  0.0134621  -2.897  0.00377 **
+    ## play_typerun            0.5290071  0.1831721   2.888  0.00388 **
+    ## game_seconds_remaining -0.0002490  0.0001637  -1.521  0.12828   
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
     ## (Dispersion parameter for binomial family taken to be 1)
     ## 
-    ##     Null deviance: 936.50  on 676  degrees of freedom
-    ## Residual deviance: 910.45  on 664  degrees of freedom
+    ##     Null deviance: 932.65  on 673  degrees of freedom
+    ## Residual deviance: 910.22  on 669  degrees of freedom
     ##   (1 observation deleted due to missingness)
-    ## AIC: 936.45
+    ## AIC: 920.22
     ## 
     ## Number of Fisher Scoring iterations: 4
 
@@ -62,15 +56,15 @@ the two-point conversion attempt. <br>
 
 ### Model 1: Data Vis
 
-Uses a binomial modeling technique to graph relationship between
-probability of successful two-point conversion and changing x axis
+We use a binomial modeling technique to graph relationship between
+probability of successful two-point conversion and the predictors. <br>
+<br> **The probability of two point conversion success increases as the
+number of total passing yards increases.**
 
-    #Increasing probability of two point conversion success based on number of total passing yards
-    pass_yards_convprob <- ggplot(two_points, aes(x = total_pass_yards, y = two_point_conv_result)) + 
+    ggplot(two_points, aes(x = total_pass_yards, y = two_point_conv_result)) + 
       geom_point() + 
-      stat_smooth(method = "glm", method.args = list(family="binomial"), se = FALSE)
-
-    pass_yards_convprob
+      stat_smooth(method = "glm", method.args = list(family="binomial"), se = FALSE) +
+      labs(x = "Total Passing Yards (Up Until to the 2PT Conv. Attempt)", y = "Probability of 2PT Conv. Success")
 
     ## `geom_smooth()` using formula 'y ~ x'
 
@@ -78,4 +72,27 @@ probability of successful two-point conversion and changing x axis
 
     ## Warning: Removed 1 rows containing missing values (geom_point).
 
-![](logistic_mod_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+![](logistic_mod_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+<br> <br> <br> <br> **The probability of two point conversion success
+descreases as the number of passes thrown by the possession team
+increases.**
+
+    ggplot(two_points, aes(x = num_passes, y = two_point_conv_result)) + 
+      geom_point() + 
+      stat_smooth(method = "glm", method.args = list(family="binomial"), se = FALSE) +
+      labs(x = "Number of Pass Attempts (Up Until to the 2PT Conv. Attempt)", y = "Probability of 2PT Conv. Success")
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+![](logistic_mod_files/figure-markdown_strict/unnamed-chunk-7-1.png)
+<br> <br> <br> <br> **The probability of two point conversion success
+descreases when there is more time remaining in the game.**
+
+    ggplot(two_points, aes(x = game_seconds_remaining/60, y = two_point_conv_result)) + 
+      geom_point() + 
+      stat_smooth(method = "glm", method.args = list(family="binomial"), se = FALSE) +
+      labs(x = "Game Minutes Remaining (At the 2PT Conv. Attempt)", y = "Probability of 2PT Conv. Success")
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+![](logistic_mod_files/figure-markdown_strict/unnamed-chunk-8-1.png)

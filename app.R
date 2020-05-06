@@ -133,7 +133,7 @@ ui <- navbarPage(theme = shinytheme("united"),
                                    )
                             )
                           ),
-                          
+
                           fluidRow(
                             column(width = 12, 
                                    style = 'padding:1em;',
@@ -237,14 +237,15 @@ server <- function(input, output) {
   output$expl_3 <- renderPlot({
     post_td_plays %>% 
       filter(!is.na(time_remaining),
-             score_situation %in% input$score_situation_options) %>% 
-      group_by(time_remaining, score_situation) %>%
-      summarise(two_pt_attempt_rate = mean(two_point_attempt == 1, na.rm = T)) %>% 
-      ggplot(aes(x = time_remaining, y = two_pt_attempt_rate, fill = score_situation, order = score_situation)) + 
-      geom_bar(stat="identity", position="dodge") + 
+             score_situation %in% input$score_situation_options2) %>% 
+      group_by(time_remaining, score_situation) %>% 
+      summarise(two_pt_conv_rate = mean(two_point_conv_result == "success", na.rm = T)) %>% 
+      ggplot(aes(x = time_remaining, y = two_pt_conv_rate, fill = score_situation, order = score_situation)) +
+      geom_bar(stat = "identity", position = "dodge") + 
       scale_x_discrete() +
       scale_fill_brewer(palette = "Spectral") +
-      labs(x = "Time Remaining (min)", y = "Two-point Conv. Attempt Rate")
+      scale_colour_discrete(name  = "Score Differential") +
+      labs(x = "Time Remaining (min)", y = "Two-point Conv. Success Rate")
   })
 
   output$scatterplot <- renderPlot({

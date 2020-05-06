@@ -7,10 +7,11 @@ output: md_document
 ```{r message=FALSE, warning=FALSE, include=FALSE}
 library(tidyverse)
 library(lubridate)
+library(MASS)
 two_points <- read_csv("two_point_attempts.csv") %>% 
   mutate(play_type = as.factor(play_type),
-         weather_detail = as.factor(weather_detail))
-# str(two_points)
+         weather_detail = as.factor(weather_detail)) %>% 
+  drop_na(third_down_conv_percentage)
 ```
 # Modeling
 We tried a couple statistical methods to predict whether a two-point conversion would be successful or not. We shared our work and results here.
@@ -21,9 +22,16 @@ We tried a couple statistical methods to predict whether a two-point conversion 
 We created a logistic regression model to determine what variables were significant in predicting the success probability of a two-point conversion. Because we are testing our thesis that a run play is a more successful option than a pass play, we included numerous variables that quantify the team's success with running the ball in the game up until the two-point conversion attempt.
 <br>
 ```{r}
-glm_twopt <- glm(two_point_conv_result ~ prop_runs_greater_than_2_yards + prop_passes_greater_than_2_yards + total_pass_yards + total_run_yards + num_runs + num_passes + avg_yds_per_play + completion_percentage + play_type + score_differential + avg_yards_per_run + avg_yards_per_pass, family = binomial(link= "logit"), data=two_points, na.action = na.exclude)
+glm_twopt <- glm(two_point_conv_result ~ prop_runs_greater_than_2_yards + prop_passes_greater_than_2_yards + total_pass_yards + total_run_yards + num_runs + num_passes + avg_yds_per_play + completion_percentage + play_type + score_differential + avg_yards_per_run + avg_yards_per_pass + score_differential + game_seconds_remaining + third_down_conv_percentage, family = binomial(link= "logit"), data = two_points, na.action = na.exclude)
+```
+<br>
+We then used the stepAIC function to select the best predictors to use in our logistic regression model. This is the model that the stepAIC function selected. 
+```{r include=FALSE}
+aic_glm <- stepAIC(glm_twopt)
+```
 
-summary(glm_twopt)
+```{r}
+summary(aic_glm)
 ```
 
 ```{r include=FALSE}
@@ -32,15 +40,37 @@ quantile(two_points$prop_runs_greater_than_2_yards, na.rm = T)
 <br>
 
 ### Model 1: Data Vis
-Uses a binomial modeling technique to graph relationship between probability of successful two-point conversion and changing x axis 
+We use a binomial modeling technique to graph relationship between probability of successful two-point conversion and the predictors.
+<br>
+<br>
+**The probability of two point conversion success increases as the number of total passing yards increases.**
 ```{r}
-#Increasing probability of two point conversion success based on number of total passing yards
-pass_yards_convprob <- ggplot(two_points, aes(x = total_pass_yards, y = two_point_conv_result)) + 
+ggplot(two_points, aes(x = total_pass_yards, y = two_point_conv_result)) + 
   geom_point() + 
-  stat_smooth(method = "glm", method.args = list(family="binomial"), se = FALSE)
-
-pass_yards_convprob
+  stat_smooth(method = "glm", method.args = list(family="binomial"), se = FALSE) +
+  labs(x = "Total Passing Yards (Up Until to the 2PT Conv. Attempt)", y = "Probability of 2PT Conv. Success")
 ```
-
+<br>
+<br>
+<br>
+<br>
+**The probability of two point conversion success descreases as the number of passes thrown by the possession team increases.**
+```{r}
+ggplot(two_points, aes(x = num_passes, y = two_point_conv_result)) + 
+  geom_point() + 
+  stat_smooth(method = "glm", method.args = list(family="binomial"), se = FALSE) +
+  labs(x = "Number of Pass Attempts (Up Until to the 2PT Conv. Attempt)", y = "Probability of 2PT Conv. Success")
+```
+<br>
+<br>
+<br>
+<br>
+**The probability of two point conversion success descreases when there is more time remaining in the game.**
+```{r}
+ggplot(two_points, aes(x = game_seconds_remaining/60, y = two_point_conv_result)) + 
+  geom_point() + 
+  stat_smooth(method = "glm", method.args = list(family="binomial"), se = FALSE) +
+  labs(x = "Game Minutes Remaining (At the 2PT Conv. Attempt)", y = "Probability of 2PT Conv. Success")
+```
 
 
