@@ -4,22 +4,25 @@ author: "Amanda Elert"
 date: "5/7/2020"
 output: md_document
 ---
-Data Source
-------
+
+# Data Source
+<br>
 Our data originates from Kaggle, where researchers compiled
-data for every play of every NFL game from 2009-2018 (https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016). 
+data for [every play of every NFL game from 2009-2018](https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016). 
 This dataset was massive, and cleaning it took up the maximum 
 space on our original github repo, which can be found here: 
 https://github.com/aelert2/StatsGroupProject.
-
+<br>
+<br>
 Because we are unable to push the full file to this shiny 
 app repo, we want to showthe dplyr chains that we used to 
 create our primary datasets, post_td_plays.csv, 
 and two_point_attempts.csv
+<br>
+<br>
 
-
-**Post TD-Plays**
-
+## post_td_plays.csv
+<br>
 We read in the play-by-play data, as well as a file 
 that contained Vegas oddsmaker's betting data and 
 weather data. Following a join, we selected the 
@@ -161,10 +164,12 @@ We also filter out penalties.
 # post_td_plays <- post_td_plays %>% 
 #   filter(play_type != "no_play")
 ```
+<br>
+<br>
+<br>
 
-
-**two_point_attempts.csv**
-
+# two_point_attempts.csv
+<br>
 Here you can see a chain of mutations that we make to the play-by-play dataset
 that cumulatively total different statistics as the game progresses. Similar to the 
 post_td_plays datset, we select them into a smaller file, and filter it down into 
