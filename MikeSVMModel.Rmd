@@ -87,7 +87,8 @@ model <- svm(formula = two_point_conv_result ~ ., data = train_plays, type = 'C-
 
 radialPredict = predict(model, test_plays)
 
-confusionMatrix(table(test_plays$two_point_conv_result,radialPredict ))
+#confusionMatrix(table(test_plays$two_point_conv_result,radialPredict ))
+
 
 
 ```
@@ -128,9 +129,6 @@ for (i in (1:100)){
 accuracyList/100
 ```
 
-```{r}
 
-
-```
 
 
