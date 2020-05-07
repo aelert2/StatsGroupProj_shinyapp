@@ -45,7 +45,6 @@ wpa_shifts <- read_csv("wpa_shifts.csv")
 ###########################################################
 # CREATING THE SHINY APP WITH THE UI AND SERVER VARIABLES #
 ###########################################################
-# Define UI
 ui <- navbarPage(theme = shinytheme("united"),
                  "2-point Conversions in the NFL",
                  tabPanel("Background",
@@ -72,7 +71,8 @@ ui <- navbarPage(theme = shinytheme("united"),
                                        # Chose what post-td play results you want to see
                                        checkboxGroupInput("prop_options", "Post-TD Play Type:",
                                                           c("Kick" = "ExtraPoint",
-                                                            "Two-point Conversion" = "TwoPoint"))
+                                                            "Two-point Conversion" = "TwoPoint"),
+                                                          selected = "TwoPoint")
                                        ),
                                      mainPanel(width = 10,
                                        plotOutput(outputId = "expl_1")
@@ -95,7 +95,8 @@ ui <- navbarPage(theme = shinytheme("united"),
                                      sidebarPanel(width = 2,
                                        checkboxGroupInput("play_type_options", "Two-Point Conversion Play Type:",
                                                           c("Run" = "run",
-                                                            "Pass" = "pass"))
+                                                            "Pass" = "pass"),
+                                                          selected = "run")
                                        ),
                                      
                                      mainPanel(width = 10,
@@ -124,7 +125,8 @@ ui <- navbarPage(theme = shinytheme("united"),
                                                                        "Tied" = "Tied",
                                                                        "Winning by 1-3" = "Winning by 1-3",
                                                                        "Winning by 4-7" = "Winning by 4-7",
-                                                                       "Winning by >7" = "Winning by >7"))
+                                                                       "Winning by >7" = "Winning by >7"),
+                                                                     selected = c("Losing by >7", "Losing by 4-7", "Losing by 1-3", "Tied", "Winning by 1-3", "Winning by 4-7", "Winning by >7"))
                                      ),
                                      
                                      mainPanel(width = 10,
@@ -237,7 +239,7 @@ server <- function(input, output) {
   output$expl_3 <- renderPlot({
     post_td_plays %>% 
       filter(!is.na(time_remaining),
-             score_situation %in% input$score_situation_options2) %>% 
+             score_situation %in% input$score_situation_options) %>% 
       group_by(time_remaining, score_situation) %>% 
       summarise(two_pt_conv_rate = mean(two_point_conv_result == "success", na.rm = T)) %>% 
       ggplot(aes(x = time_remaining, y = two_pt_conv_rate, fill = score_situation, order = score_situation)) +
