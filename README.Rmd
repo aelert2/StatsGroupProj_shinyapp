@@ -8,7 +8,7 @@ output: md_document
 # StatsGroupProj_shinyapp
 **Authors:** Amanda Elert, Mike Hoffmann, and Bobby Pfefferle 
 <br>
-**Class:** UW-Madoson Statistics 479 - Spring 2020
+**Class:** UW-Madison Statistics 479 - Spring 2020
 <br>
 **Purpose:** Final class project
 <br>
