@@ -165,7 +165,12 @@ We also filter out penalties.
 
 **two_point_attempts.csv**
 
-#Here you can see a chain of mutations that we make to the play-by-play dataset that cumulatively total different statistics as the game progresses. Similar to the post_td_plays datset, we select them into a smaller file, and filter it down into instances of two-point attempts. This way, in each of our rows where a two-point attempt happens, these columns provide statistics that show how successful teams have been offesnively up to that point in the game. 
+Here you can see a chain of mutations that we make to the play-by-play dataset
+that cumulatively total different statistics as the game progresses. Similar to the 
+post_td_plays datset, we select them into a smaller file, and filter it down into 
+instances of two-point attempts. This way, in each of our rows where a two-point 
+attempt happens, these columns provide statistics that show how successful teams 
+have been offesnively up to that point in the game. 
 ```{r}
 # #Data Cleaning for logistic regression
 # 
