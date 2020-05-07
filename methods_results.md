@@ -66,6 +66,8 @@ number of total passing yards increases.**
       stat_smooth(method = "glm", method.args = list(family="binomial"), se = FALSE) +
       labs(x = "Total Passing Yards (Up Until to the 2PT Conv. Attempt)", y = "Probability of 2PT Conv. Success")
 
+    ## `geom_smooth()` using formula 'y ~ x'
+
     ## Warning: Removed 1 rows containing non-finite values (stat_smooth).
 
     ## Warning: Removed 1 rows containing missing values (geom_point).
@@ -80,6 +82,8 @@ increases.**
       stat_smooth(method = "glm", method.args = list(family="binomial"), se = FALSE) +
       labs(x = "Number of Pass Attempts (Up Until to the 2PT Conv. Attempt)", y = "Probability of 2PT Conv. Success")
 
+    ## `geom_smooth()` using formula 'y ~ x'
+
 ![](methods_results_files/figure-markdown_strict/unnamed-chunk-7-1.png)
 <br> <br> <br> <br> **The probability of two point conversion success
 descreases when there is more time remaining in the game.**
@@ -88,6 +92,8 @@ descreases when there is more time remaining in the game.**
       geom_point() + 
       stat_smooth(method = "glm", method.args = list(family="binomial"), se = FALSE) +
       labs(x = "Game Minutes Remaining (At the 2PT Conv. Attempt)", y = "Probability of 2PT Conv. Success")
+
+    ## `geom_smooth()` using formula 'y ~ x'
 
 ![](methods_results_files/figure-markdown_strict/unnamed-chunk-8-1.png)
 <br> <br> <br> <br>
@@ -98,16 +104,13 @@ Model 2: Support Vector Machine
 For further exploration, we implemented a Support Vector Machine to
 attempt to find an optimal boundary to predict whether a two-point
 conversion would be successful or unsuccessful depending on game
-features leading up to that two-point conversion play.
-
-Based off of the implementation below, we predicted on our out-of-sample
-dataset with 49% accuracy, which is just below chance for our dependent
-variable. This low accuracy could be attributed to overfitting within
-the model. Further work to improve this model would be to optimize the
-hyperparameters. This could include possibly trianing with more data, or
-removing irrelevant input features.
-
-<br>
+features leading up to that two-point conversion play. <br> <br> Based
+off of the implementation below, we predicted on our testing subset with
+49% accuracy, which is just below chance for our dependent variable.
+This low accuracy could be attributed to overfitting within the model.
+Further work to improve this model would be to optimize the
+hyperparameters. This could include possibly training with more data or
+removing irrelevant input features. <br>
 
     accuracyList = 0
     for (i in (1:100)){
@@ -127,18 +130,19 @@ removing irrelevant input features.
 
     accuracyList/100
 
-    ## [1] 0.4892537
+    ## [1] 0.4968657
 
 <br> <br>
 
 Model 3: Principle Component Analysis
 -------------------------------------
 
-To help reduce the feature space in our svm, we attempted to use PCA.
+To help reduce the feature space in our SVM, we attempted to use PCA.
 The output of PCA on our dataset below did not help us identify
-variables for extraction, or elimination. We believe that this is due to
-the fact that our variables are correlated to eachother.
-
+variables for extraction or elimination. We believe that this is due to
+the fact that [our variables are correlated to each other which is not
+an optimal procedure for selecting
+features](https://towardsdatascience.com/understanding-pca-fae3e243731d).
 <br>
 
     run.pr <- prcomp(svm_df[1:15], center = TRUE, scale = TRUE)
