@@ -36,6 +36,8 @@ svm_df <- two_points %>%
          prop_passes_greater_than_2_yards,
          avg_yards_per_run,
          avg_yards_per_pass)
+
+svm_df = drop_na(svm_df)
 ```
 
 
@@ -124,6 +126,11 @@ for (i in (1:100)){
 
 ```{r}
 accuracyList/100
+```
+
+```{r}
+
+
 ```
 
 
