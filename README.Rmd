@@ -15,4 +15,8 @@ output: md_document
 **Title:** 2-point Conversions in the NFL
 <br>
 <br>
-**Instructions:** Run the file app.R in its entirety to view the Shiny app we created. 
+**Instructions:** 
+<br>
+1. View the data_cleaning.md file to understand how we cleaned and manipulated the large NFL play-by-play dataset to create two smaller datasets (post_td_plays.csv and two_point_attempts.csv) to then analyze more easily.
+<br>
+2. Run the file app.R in its entirety to view the Shiny app we created. 
