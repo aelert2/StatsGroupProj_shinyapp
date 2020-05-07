@@ -54,7 +54,7 @@ function selected.
 
 <br>
 
-### Model 1: Data Vis
+### Model 1: Data Visualization
 
 We use a binomial modeling technique to graph relationship between
 probability of successful two-point conversion and the predictors. <br>
@@ -96,3 +96,61 @@ descreases when there is more time remaining in the game.**
     ## `geom_smooth()` using formula 'y ~ x'
 
 ![](methods_results_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+<br> <br> <br> <br>
+
+Model 2: Support Vector Machine
+-------------------------------
+
+MIKE EDIT HERE <br>
+
+    accuracyList = 0
+    for (i in (1:100)){
+      variables_lowCorrelation <- na.omit(variables_lowCorrelation1)
+      n <- nrow(variables_lowCorrelation)
+      ntrain <- round(n*.9)
+      svm_plays <- sample(n, ntrain)
+      train_plays <- variables_lowCorrelation[svm_plays,]
+      test_plays <- variables_lowCorrelation[-svm_plays,]
+      
+      model <- svm(formula = two_point_conv_result ~ ., data = train_plays, type = 'C-classification', kernel = 'polynomial')
+      
+      radialPredict = predict(model, test_plays)
+      confusion <- confusionMatrix(table(test_plays$two_point_conv_result, radialPredict))
+      accuracyList <- accuracyList + confusion$overall[["Accuracy"]]
+    }
+
+    accuracyList/100
+
+    ## [1] 0.498209
+
+<br> <br>
+
+### Model 2: Data Visualization
+
+ARE WE DOING THIS? <br> <br> <br> <br>
+
+Model 3: Principle Component Analysis
+-------------------------------------
+
+MIKE ADD HERE <br>
+
+    run.pr <- prcomp(svm_df[1:15], center = TRUE, scale = TRUE)
+
+<br> <br>
+
+### Model 3: Data Visualization
+
+    fviz_pca_ind(run.pr, geom.ind = "point", pointshape = 21, 
+                 pointsize = 2, 
+                 fill.ind = as.factor(svm_df$two_point_conv_result), 
+                 col.ind = "black", 
+                 palette = "jco", 
+                 addEllipses = TRUE,
+                 label = "var",
+                 col.var = "black",
+                 repel = TRUE,
+                 legend.title = "2-Point Conversion Result") +
+      ggtitle("2D PCA-plot from 15 feature dataset") +
+      theme(plot.title = element_text(hjust = 0.5))
+
+![](methods_results_files/figure-markdown_strict/unnamed-chunk-12-1.png)

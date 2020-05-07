@@ -9,6 +9,7 @@ library(dplyr)
 library(readr)
 library(lubridate)
 
+
 # Load data
 # This dataset contains the NFL pbp data, betting data, and weather data all filtered to only include the post-td plays (i.e. extra point kicks and two-pt conv attempts)
 post_td_plays <- read_csv("post_td_plays.csv")
@@ -34,9 +35,6 @@ post_td_plays <- post_td_plays %>%
 #Level the factors so they're graphed in order
 post_td_plays$time_remaining <- factor(post_td_plays$time_remaining,levels = c("<2Min", "2-5min left", "5-10min left", "10-15min left","Before 4th Quarter"))
 post_td_plays$score_situation <- factor(post_td_plays$score_situation,levels = c("Losing by >7", "Losing by 4-7", "Losing by 1-3", "Tied", "Winning by 1-3", "Winning by 4-7","Winning by >7"))
-
-# Might delete this table if we don't use it anymore
-wpa_shifts <- read_csv("wpa_shifts.csv")
 
 ###############################################################################################################################################################################################
 ###############################################################################################################################################################################################
@@ -134,29 +132,6 @@ ui <- navbarPage(theme = shinytheme("united"),
                                      )
                                    )
                             )
-                          ),
-
-                          fluidRow(
-                            column(width = 12, 
-                                   style = 'padding:1em;',
-                                   sidebarLayout(
-                                     sidebarPanel(
-                                       checkboxGroupInput("extra_point_type_options", "Post-TD Play Type:",
-                                                         c("Kick" = "Kick",
-                                                           "Two-point Conversion" = "Two-PointConversion")),
-                                       br(),
-                                       sliderInput("game_minutes_remaining",
-                                                  "Game Minutes Remaining:",
-                                                  value = 15, # start of 4th quarter
-                                                  min = 0,
-                                                  max = 60)
-                                       ),
-                                     
-                                     mainPanel(
-                                       plotOutput(outputId = "scatterplot")
-                                       )
-                                     )
-                                   )
                           )
                        ),
                  
@@ -182,7 +157,6 @@ ui <- navbarPage(theme = shinytheme("united"),
 
 server <- function(input, output) {
   
-  # Create bar graph of proportion of post-td plays from 2009-2018
   output$expl_1 <- renderPlot({
     post_td_plays %>% 
       group_by(year, extra_point_type) %>% 
@@ -238,30 +212,9 @@ server <- function(input, output) {
       scale_colour_discrete(name  = "Score Differential") +
       labs(x = "Time Remaining (min)", y = "Two-point Conv. Success Rate")
   })
-
-  output$scatterplot <- renderPlot({
-    post_td_plays %>% 
-      filter(extra_point_type %in% input$extra_point_type_options) %>% 
-      mutate(game_minutes_remaining = game_seconds_remaining / 60) %>% 
-      filter(game_minutes_remaining <= input$game_minutes_remaining) %>% 
-      ggplot(aes(x = game_minutes_remaining, y = wpa, color = extra_point_type)) + 
-      geom_point() + 
-      scale_x_reverse() +
-      labs(title="Win Probability Added (WPA) Based on Post-TD Play Type Over the Course of a NFL Game",x="Game Time Remaining (Minutes)", y = "WPA")
-  })
-  
-  output$linegraphWPAShifts <- renderPlot({
-    wpa_shifts %>% 
-      pivot_longer(c(kick, two_pt_conv), names_to = "play_type", values_to = "wpa") %>% 
-      filter(play_type %in% input$play_type) %>% 
-      ggplot(aes(x = point_differential, y = wpa, color = play_type)) +
-      geom_line() +
-      labs(title="WPA Shifts By Point Differential",x="Point Differential (PostTeam's Perspective)", y = "WPA")
-  })
 }
 
 # Create Shiny object
 shinyApp(ui = ui, server = server)
 
-# library(shiny)
-# runGitHub("StatsGroupProject_shinyapp", "aelert2")
+
