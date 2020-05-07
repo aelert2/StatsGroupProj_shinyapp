@@ -101,7 +101,11 @@ descreases when there is more time remaining in the game.**
 Model 2: Support Vector Machine
 -------------------------------
 
-MIKE EDIT HERE <br>
+For further exploration, we implemented a Support Vector Machine to attempt to find an optimal boundary to predict whether a two-point conversion would be successful or unsuccessful depending on game features leading up to that two-point conversion play. 
+
+Based off of the implementation below, we predicted on our out-of-sample dataset with 49% accuracy, which is just below chance for our dependent variable. This low accuracy could be attributed to overfitting within the model. Further work to improve this model would be to optimize the hyperparameters. This could include possibly trianing with more data, or removing irrelevant input features. 
+<br>
+
 
     accuracyList = 0
     for (i in (1:100)){
@@ -125,14 +129,11 @@ MIKE EDIT HERE <br>
 
 <br> <br>
 
-### Model 2: Data Visualization
-
-ARE WE DOING THIS? <br> <br> <br> <br>
 
 Model 3: Principle Component Analysis
 -------------------------------------
 
-MIKE ADD HERE <br>
+To help reduce the feature space in our svm, we attempted to use PCA. The output of PCA on our dataset below did not help us identify variables for extraction, or elimination. We believe that this is due to the fact that our variables are correlated to eachother.   <br>
 
     run.pr <- prcomp(svm_df[1:15], center = TRUE, scale = TRUE)
 
