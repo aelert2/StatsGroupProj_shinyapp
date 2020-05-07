@@ -4,14 +4,32 @@ author: "Amanda Elert"
 date: "5/7/2020"
 output: md_document
 ---
-**Our data originates from Kaggle, where researchers compiled data for every play of every NFL game from 2009-2018 (https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016). This dataset was massive, and cleaning it took up the maximum space on our original github repo, which can be found here: https://github.com/aelert2/StatsGroupProject.**
+Data Source
+------
+Our data originates from Kaggle, where researchers compiled
+data for every play of every NFL game from 2009-2018 (https://www.kaggle.com/maxhorowitz/nflplaybyplay2009to2016). 
+This dataset was massive, and cleaning it took up the maximum 
+space on our original github repo, which can be found here: 
+https://github.com/aelert2/StatsGroupProject.
 
-**Because we are unable to push the full file to this shiny app repo, we want to showthe dplyr chains that we used to create our primary datasets, post_td_plays.csv, and two_point_attempts.csv**
+Because we are unable to push the full file to this shiny 
+app repo, we want to showthe dplyr chains that we used to 
+create our primary datasets, post_td_plays.csv, 
+and two_point_attempts.csv
 
 
 **Post TD-Plays**
 
-#We read in the play-by-play data, as well as a file that contained Vegas oddsmaker's betting data and weather data. Following a join, we selected the columns that we felt provided valuable context to the two point conversions. We kept most columns, but removed some that were totally irrelevant. Afterwards, we filter it down to just the rows that involve plays following a touchdown, which are extra-point kicks and two-point conversions. We also filter out penalties. 
+We read in the play-by-play data, as well as a file 
+that contained Vegas oddsmaker's betting data and 
+weather data. Following a join, we selected the 
+columns that we felt provided valuable context to 
+the two point conversions. We kept most columns, 
+but removed some that were totally irrelevant. 
+Afterwards, we filter it down to just the rows 
+that involve plays following a touchdown, which 
+are extra-point kicks and two-point conversions. 
+We also filter out penalties. 
 ```{r}
 # nfl_data <-  read_csv("NFLPlaybyPlay 2009-2018.csv")
 # spread_data = read.csv("spreadspoke_scores.csv")
