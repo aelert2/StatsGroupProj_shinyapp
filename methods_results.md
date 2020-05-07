@@ -1,5 +1,5 @@
-Modeling
-========
+Methods and Results
+===================
 
 We tried a couple statistical methods to predict whether a two-point
 conversion would be successful or not. We shared our work and results
@@ -72,7 +72,7 @@ number of total passing yards increases.**
 
     ## Warning: Removed 1 rows containing missing values (geom_point).
 
-![](logistic_mod_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+![](methods_results_files/figure-markdown_strict/unnamed-chunk-6-1.png)
 <br> <br> <br> <br> **The probability of two point conversion success
 descreases as the number of passes thrown by the possession team
 increases.**
@@ -84,7 +84,7 @@ increases.**
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-![](logistic_mod_files/figure-markdown_strict/unnamed-chunk-7-1.png)
+![](methods_results_files/figure-markdown_strict/unnamed-chunk-7-1.png)
 <br> <br> <br> <br> **The probability of two point conversion success
 descreases when there is more time remaining in the game.**
 
@@ -95,4 +95,4 @@ descreases when there is more time remaining in the game.**
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-![](logistic_mod_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+![](methods_results_files/figure-markdown_strict/unnamed-chunk-8-1.png)

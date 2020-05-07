@@ -1,5 +1,5 @@
-Background
-==========
+Introduction
+============
 
 **Authors:** Amanda Elert, Mike Hoffmann, and Bobby Pfefferle <br>
 **Class:** Statistics 479 - Spring 2020 <br> **Purpose:** Final class

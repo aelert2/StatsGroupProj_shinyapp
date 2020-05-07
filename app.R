@@ -47,11 +47,11 @@ wpa_shifts <- read_csv("wpa_shifts.csv")
 ###########################################################
 ui <- navbarPage(theme = shinytheme("united"),
                  "2-point Conversions in the NFL",
-                 tabPanel("Background",
+                 tabPanel("Introduction",
                           fluidRow(
                             column(width = 12, 
                                    style = 'padding:1em;',
-                                   includeMarkdown("desc_text.md")
+                                   includeMarkdown("introduction.md")
                                    )
                             )
                           ),
@@ -160,22 +160,11 @@ ui <- navbarPage(theme = shinytheme("united"),
                           )
                        ),
                  
-                 tabPanel("Modeling",
+                 tabPanel("Methods and Results",
                           fluidRow(
                             column(width = 12, 
                                    style = 'padding:1em;',
-                                   includeMarkdown("logistic_mod.md")
-                                   # sidebarLayout(
-                                   #   sidebarPanel(
-                                   #     checkboxGroupInput("play_type", "Post-TD Play Type:",
-                                   #                        c("Kick" = "kick",
-                                   #                          "Two-point Conversion" = "two_pt_conv")),
-                                   #   ),
-                                   #   
-                                   #   mainPanel(
-                                   #     plotOutput(outputId = "linegraphWPAShifts")
-                                   #   )
-                                   # )
+                                   includeMarkdown("methods_results.md")
                             )
                           )
                  ),

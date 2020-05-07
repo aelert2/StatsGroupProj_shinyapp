@@ -13,7 +13,7 @@ two_points <- read_csv("two_point_attempts.csv") %>%
          weather_detail = as.factor(weather_detail)) %>% 
   drop_na(third_down_conv_percentage)
 ```
-# Modeling
+# Methods and Results
 We tried a couple statistical methods to predict whether a two-point conversion would be successful or not. We shared our work and results here.
 <br>
 <br>
